@@ -6,7 +6,7 @@ namespace DataParser
 {
   public class CsvParser
   {
-    public List<T> ParseFile<T>(string path, ICsvLineParser<T> lineParser)
+    public List<T> ParseFile<T>(string path, ICsvLineFormatter<T> lineParser)
     {
       var products = new List<T>();
       using (var sr = new StreamReader(path, Encoding.Default))

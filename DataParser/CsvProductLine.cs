@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DataParser
 {
-  public class ProductParser : ICsvLineParser<CsvProduct>
+  public class CsvProductLine : ICsvLineFormatter<CsvProduct>
   {
     public CsvProduct ParseScvLine(string line)
     {

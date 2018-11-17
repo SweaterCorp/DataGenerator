@@ -1,6 +1,6 @@
 ﻿namespace DataParser
 {
-  public class TypeParser : ICsvLineParser<CsvType>
+  public class CsvTypeLine : ICsvLineFormatter<CsvType>
   {
     public CsvType ParseScvLine(string line)
     {

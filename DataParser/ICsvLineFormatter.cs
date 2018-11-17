@@ -1,6 +1,6 @@
 ﻿namespace DataParser
 {
-  public interface ICsvLineParser<T>
+  public interface ICsvLineFormatter<T>
   {
     T ParseScvLine(string line);
   }
