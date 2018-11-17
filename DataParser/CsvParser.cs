@@ -6,7 +6,7 @@ namespace DataParser
 {
   public class CsvParser
   {
-    public void ParseFile<T>(string path, ICsvLineParser<T> lineParser)
+    public List<T> ParseFile<T>(string path, ICsvLineParser<T> lineParser)
     {
       var products = new List<T>();
       using (var sr = new StreamReader(path, Encoding.Default))
@@ -18,6 +18,7 @@ namespace DataParser
           if (line != string.Empty && !line.StartsWith("//")) products.Add(lineParser.ParseScvLine(line));
         }
       }
+      return products;
     }
   }
 }
