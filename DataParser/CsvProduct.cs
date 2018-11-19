@@ -10,7 +10,7 @@ namespace DataParser
     public string Print { get; set; }
     public string Price { get; set; }
     public string MadeInCountry { get; set; }
-    public string Site { get; set; }
+    public string Link { get; set; }
     public IEnumerable<Size> Sizes { get; set; }
     public IEnumerable<string> PhotosUrls { get; set; }
   }
@@ -18,6 +18,7 @@ namespace DataParser
   public class Size
   {
     public string Russian { get; set; }
+    public bool IsAvailable { get; set; }
     public string OtherCountry { get; set; }
     public string CountryType { get; set; }
   }
