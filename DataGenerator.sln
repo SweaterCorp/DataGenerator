@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGenerator", "DataGenera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataParser", "DataParser\DataParser.csproj", "{FF859313-CB50-4411-B81F-CBE8A61194F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorsExcelParser", "ColorsExcelParser\ColorsExcelParser.csproj", "{8CCAB631-DB7B-42A9-8796-E7141A973580}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorsExcelParser", "ColorsExcelParser\ColorsExcelParser.csproj", "{8CCAB631-DB7B-42A9-8796-E7141A973580}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonLibraries", "..\..\Server\CommonLibraries\CommonLibraries\CommonLibraries.csproj", "{EAD25123-6990-4260-80C5-CD4AEBB84DE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainConsole", "MainConsole\MainConsole.csproj", "{DFB9F842-56FB-47F6-8626-338B686E1523}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EAD25123-6990-4260-80C5-CD4AEBB84DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAD25123-6990-4260-80C5-CD4AEBB84DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAD25123-6990-4260-80C5-CD4AEBB84DE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFB9F842-56FB-47F6-8626-338B686E1523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFB9F842-56FB-47F6-8626-338B686E1523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFB9F842-56FB-47F6-8626-338B686E1523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFB9F842-56FB-47F6-8626-338B686E1523}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
