@@ -36,7 +36,7 @@ namespace DataParser
       var otherSize = elements[1].Split(":")[1];
       var countryType = elements[1].Split(":")[0];
 
-      var size = new Size { IsAvailable  = isAvailable, Russian = rusSize, OtherCountry = otherSize, CountryType = countryType};
+      var size = new Size { IsAvailable  = isAvailable, RussianSize = rusSize, OtherCountry = otherSize, CountryCode = countryType};
       return size;
     }
 
