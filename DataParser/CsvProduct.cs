@@ -17,9 +17,9 @@ namespace DataParser
 
   public class Size
   {
-    public string Russian { get; set; }
+    public string RussianSize { get; set; }
     public bool IsAvailable { get; set; }
     public string OtherCountry { get; set; }
-    public string CountryType { get; set; }
+    public string CountryCode { get; set; }
   }
 }
