@@ -2,6 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using CommonLibraries.CommonTypes;
+using CommonLibraries.Infrastructures;
+using CommonLibraries.Resources;
+using CommonLibraries.Resources.DeserializerTypes;
 using DataParser;
 using ProductDatabase.DTOs;
 
@@ -16,7 +19,12 @@ namespace DataGenerator
 
     private static AddProductDto FromCsvToDto(CategoryType category, CsvProduct product)
     {
-      var colorId = LamodaColorType.StringToLamodaColorType(product.Color, true).Id;
+      var shopColor = LamodaColorType.StringToLamodaColorType(product.Color, true);
+      ContentPath path = new ContentPath();
+      var handler = new ResourceHandler();
+      //TODO вынести это и чтобы сразу при запуске программы все ресурсы подгрузились
+      var lamodaColors = handler.ReadeResourceFile<LamodaColorsDeserializer>(path.LamodaColors);
+
       var printIds = product.Print.Split(",").Select(x => PrintType.StringToPrintType(x.Trim(), true).Id).ToList();
       var printTypeId = printIds[0];
       var extraPrintTypeId = printIds.Count >= 2 ? printIds[1] : 0;
@@ -25,7 +33,9 @@ namespace DataGenerator
       var result = new AddProductDto
       {
         BrandName = product.Brand,
-        ColorId = colorId,
+        ShopColorId = shopColor.Id,
+        ShopTypeId = 0,
+        ColorIds = lamodaColors.Colors.First(x => x.LamodaColorType == shopColor.Id).HexColors.Select(ServerColor.ToInt).ToList(),
         CategoryTypeId = category.Id,
         Country = product.MadeInCountry,
         Link = product.Link,
