@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using CommonLibraries;
+using CommonLibraries.ColorAlgos;
 using CommonLibraries.CommonTypes;
 using CommonLibraries.Infrastructures;
 using CommonLibraries.Resources;
@@ -38,16 +39,10 @@ namespace DataGenerator
       var colorClassifier = new ColorClassifier();
       colorClassifier.Init();
 
-      var colors = colorRepository.GetColorMatching().GetAwaiter().GetResult();
+      var colors = colorRepository.GetColorGoodness().GetAwaiter().GetResult();
       foreach (var color in colors)
       {
-        color.Blue = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.Blue, new ServerColor(color.ColorId));
-        color.BrownBeige = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.BrownBeige, new ServerColor(color.ColorId));
-        color.GrayBlackWhite = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.GrayBlackWhite, new ServerColor(color.ColorId));
-        color.Green = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.Green, new ServerColor(color.ColorId));
-        color.OrangeYellow = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.OrangeYellow, new ServerColor(color.ColorId));
-        color.Purple = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.Purple, new ServerColor(color.ColorId));
-        color.RedPink = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, ColorGroupType.RedPink, new ServerColor(color.ColorId));
+        color.Goodness = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, new ServerColor(color.ColorId));
       }
 
       colorRepository.UpdateColorsMatchin(colors).GetAwaiter().GetResult();
@@ -59,16 +54,10 @@ namespace DataGenerator
       var csvProducts = ReadCsvPtoducts(path);
       var dtoProducts = ProductCsvToDtoConverter.ConvertCsvProductToDto(csvProducts, CategoryType.BlousesShirts);
 
-      //  ContentPath content = new ContentPath(AppContext.BaseDirectory);
-      //var resource = new ResourceHandler();
-      //  var lamodaColors = resource.ReadeResourceFile<LamodaColorsDeserializer>(content.LamodaColors);
-
       foreach (var addProductDto in dtoProducts)
       {
         productRepository.AddProduct(addProductDto).GetAwaiter().GetResult();
       }
-
-      //var products = productRrepo.AddProduct(dtoProducts[0]).GetAwaiter().GetResult();
     }
 
     public static string GetPath()
