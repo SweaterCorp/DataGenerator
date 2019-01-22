@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using CommonLibraries;
 using CommonLibraries.ColorAlgos;
@@ -24,31 +25,48 @@ namespace DataGenerator
       builder.UseSqlServer(GetConnectionString());
       var context = new ProductContext(builder.Options);
 
-      var productRepo = new ProductRepository(context);
-      var colorRepo = new ColorRepository(context);
-
-      //colorRepo.FillColorMatchingFromProducts().GetAwaiter().GetResult();
+      var productRepo = new GeneratedProductDataRepository(context);
+      var colorRepo = new ColorGoodnessRepository(context);
+      var productColorRepo = new ProductColorGoodnessRepository(context);
 
       //FillProductCategory(productRepo);
-      //FillColorMatching(colorRepo);
-
+      //colorRepo.FillColorGoodnessesFromProducts().GetAwaiter().GetResult();
+      //productColorRepo.FillProductColorGoodnessesFromProducts().GetAwaiter().GetResult();
+      //FillColorGoodnesses(colorRepo);
+      //FillProductColorGoodnesses(productColorRepo, colorRepo);
     }
 
-    public static void FillColorMatching(ColorRepository colorRepository)
+    public static void FillColorGoodnesses(ColorGoodnessRepository colorRepository)
     {
-      var colorClassifier = new ColorClassifier();
+      var colorClassifier = new ColorGoodnessQualifier();
       colorClassifier.Init();
 
-      var colors = colorRepository.GetColorGoodness().GetAwaiter().GetResult();
+      var colors = colorRepository.GetColorGoodnesses().GetAwaiter().GetResult();
       foreach (var color in colors)
       {
         color.Goodness = (float)colorClassifier.GetColorGoodness((PersonalColorType) color.PersonalColorTypeId, new ServerColor(color.ColorId));
       }
 
-      colorRepository.UpdateColorsMatchin(colors).GetAwaiter().GetResult();
+      colorRepository.UpdateColorGoodnesses(colors).GetAwaiter().GetResult();
     }
 
-    public static void FillProductCategory(ProductRepository productRepository)
+    public static void FillProductColorGoodnesses(ProductColorGoodnessRepository productColorRepository, ColorGoodnessRepository colorRepository)
+    {
+      var productColorGoodness = productColorRepository.GetProductColorGoodnesses().GetAwaiter().GetResult();
+      var productWithColorGoodness = productColorRepository.GetProductWithColorGoodnessAsync().GetAwaiter().GetResult();
+
+
+      foreach (var colorGoodness in productColorGoodness)
+      {
+        var product = productWithColorGoodness.Find(x => x.ProductId == colorGoodness.ProductId);
+        var goodnesses = product.ProductColorGoodnesses.Where(x => x.PersonalColorTypeId == colorGoodness.PersonalColorTypeId).Select(x=>x.Goodness);
+        colorGoodness.Goodness = goodnesses.Max();
+      }
+
+      productColorRepository.UpdateColorGoodnesses(productColorGoodness).GetAwaiter().GetResult();
+    }
+
+    public static void FillProductCategory(GeneratedProductDataRepository productRepository)
     {
       var path = @"E:\Projects\Zebra\Project\Database\DatabaseData\ParsedData\blouses_shirts.csv";
       var csvProducts = ReadCsvPtoducts(path);
