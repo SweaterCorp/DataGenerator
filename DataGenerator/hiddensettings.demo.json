@@ -1,0 +1,6 @@
+﻿{
+  "ConnectionStrings": {
+    "SweaterMainConnection": "Server=***;Database=***;Trusted_Connection=True;",
+    "SweaterAccountConnection": "Server=***;Database=***;Trusted_Connection=True;"
+  }
+}
