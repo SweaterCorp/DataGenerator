@@ -19,24 +19,44 @@ namespace DataGenerator
 {
   internal class Program
   {
+   
     private static void Main(string[] args)
     {
+      const string path = @"E:\Projects\Zebra\Project\Database\DatabaseData\ParsedData\blouses_shirts.csv";
+
       var builder = new DbContextOptionsBuilder();
       builder.UseSqlServer(GetConnectionString());
       var context = new ProductContext(builder.Options);
 
-      var productRepo = new GeneratedProductDataRepository(context);
+      var productRepo = new ProductRepository(context);
       var colorRepo = new ColorGoodnessRepository(context);
       var productColorRepo = new ProductColorGoodnessRepository(context);
 
-      //FillProductCategory(productRepo);
-      //colorRepo.FillColorGoodnessesFromProducts().GetAwaiter().GetResult();
-      //productColorRepo.FillProductColorGoodnessesFromProducts().GetAwaiter().GetResult();
-      //FillColorGoodnesses(colorRepo);
-      //FillProductColorGoodnesses(productColorRepo, colorRepo);
+      //InitDb(path, CategoryType.BlousesShirts, productRepo, colorRepo, productColorRepo);
+
+      QualifyColorGoodnesses(colorRepo);
+      QualifyProductColorGoodnesses(productColorRepo, colorRepo);
     }
 
-    public static void FillColorGoodnesses(ColorGoodnessRepository colorRepository)
+    public static void InitDb(string fromFilePath, CategoryType categoryType, ProductRepository productRepository, ColorGoodnessRepository colorGoodnessRepo, ProductColorGoodnessRepository productColorRepo)
+    {
+      FillProduct(fromFilePath, categoryType, productRepository);
+      colorGoodnessRepo.FillColorGoodnessesFromProducts().GetAwaiter().GetResult();
+      productColorRepo.FillProductColorGoodnessesFromProducts().GetAwaiter().GetResult();
+    }
+
+    public static void FillProduct(string fromFilePath, CategoryType categoryType, ProductRepository productRepository)
+    {
+      var csvProducts = ReadCsvPtoducts(fromFilePath);
+      var dtoProducts = ProductCsvToDtoConverter.ConvertCsvProductToDto(csvProducts, categoryType);
+
+      foreach (var addProductDto in dtoProducts)
+      {
+        productRepository.AddProduct(addProductDto).GetAwaiter().GetResult();
+      }
+    }
+
+    public static void QualifyColorGoodnesses(ColorGoodnessRepository colorRepository)
     {
       var colorClassifier = new ColorGoodnessQualifier();
       colorClassifier.Init();
@@ -50,7 +70,7 @@ namespace DataGenerator
       colorRepository.UpdateColorGoodnesses(colors).GetAwaiter().GetResult();
     }
 
-    public static void FillProductColorGoodnesses(ProductColorGoodnessRepository productColorRepository, ColorGoodnessRepository colorRepository)
+    public static void QualifyProductColorGoodnesses(ProductColorGoodnessRepository productColorRepository, ColorGoodnessRepository colorRepository)
     {
       var productColorGoodness = productColorRepository.GetProductColorGoodnesses().GetAwaiter().GetResult();
       var productWithColorGoodness = productColorRepository.GetProductWithColorGoodnessAsync().GetAwaiter().GetResult();
@@ -64,18 +84,6 @@ namespace DataGenerator
       }
 
       productColorRepository.UpdateColorGoodnesses(productColorGoodness).GetAwaiter().GetResult();
-    }
-
-    public static void FillProductCategory(GeneratedProductDataRepository productRepository)
-    {
-      var path = @"E:\Projects\Zebra\Project\Database\DatabaseData\ParsedData\blouses_shirts.csv";
-      var csvProducts = ReadCsvPtoducts(path);
-      var dtoProducts = ProductCsvToDtoConverter.ConvertCsvProductToDto(csvProducts, CategoryType.BlousesShirts);
-
-      foreach (var addProductDto in dtoProducts)
-      {
-        productRepository.AddProduct(addProductDto).GetAwaiter().GetResult();
-      }
     }
 
     public static string GetPath()
